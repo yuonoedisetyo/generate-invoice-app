@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { LogoZegen } from '../assets';
 
 type InvoiceItem = {
     description: string;
@@ -13,7 +14,7 @@ type InvoiceItem = {
     clientAddress: string;
     items: InvoiceItem[];
   };
-  
+
 const Invoice: React.FC<{ invoiceData: InvoiceData }> = ({ invoiceData }) => {
   const calculateTotal = () => {
     return invoiceData.items.reduce(
@@ -25,7 +26,7 @@ const Invoice: React.FC<{ invoiceData: InvoiceData }> = ({ invoiceData }) => {
   return (
     <InvoiceContainer>
       <Header>
-        <Logo src="/path/to/logo.png" alt="Logo" />
+        <Logo src={LogoZegen} alt="Logo" />
         <h1>Invoice #{invoiceData.invoiceNumber}</h1>
       </Header>
 

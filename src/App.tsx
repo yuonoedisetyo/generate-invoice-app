@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Invoice from './Invoice';
+import Invoice from './pages/Invoice';
 
 type InvoiceItem = {
   description: string;
@@ -22,6 +22,7 @@ const App: React.FC = () => {
     clientAddress: '',
     items: [{ description: '', quantity: 1, price: 0 }],
   });
+  const [showInvoice,setShowInvoice] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const { name, value } = e.target;
@@ -37,6 +38,17 @@ const App: React.FC = () => {
       items: [...invoiceData.items, { description: '', quantity: 1, price: 0 }],
     });
   };
+  console.log("showInvoice",showInvoice)
+  const handleResetForm = () => {
+    setShowInvoice(false)
+    setInvoiceData({
+      invoiceNumber: '',
+      clientName: '',
+      clientAddress: '',
+      items: [{ description: '', quantity: 1, price: 0 }],
+    });
+    
+  };
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -46,10 +58,12 @@ const App: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // You could implement further logic here, such as generating a PDF.
+    setShowInvoice(true)
   };
 
   return (
     <Container>
+      <h1>Invoice Generator App</h1>
       <Form onSubmit={handleSubmit}>
         <Input
           type="text"
@@ -74,7 +88,7 @@ const App: React.FC = () => {
         />
 
         {invoiceData.items.map((item, index) => (
-          <div key={index}>
+          <div key={index} style={{display:'flex',flexWrap:'wrap'}}>
             <Input
               type="text"
               name="description"
@@ -82,6 +96,7 @@ const App: React.FC = () => {
               value={item.description}
               onChange={(e) => handleInputChange(e, index)}
             />
+            <div style={{width:10}}></div>
             <Input
               type="number"
               name="quantity"
@@ -89,6 +104,7 @@ const App: React.FC = () => {
               value={item.quantity}
               onChange={(e) => handleInputChange(e, index)}
             />
+            <div style={{width:10}}></div>
             <Input
               type="number"
               name="price"
@@ -98,13 +114,21 @@ const App: React.FC = () => {
             />
           </div>
         ))}
-        <Button type="button" onClick={handleAddItem}>
+        <Button type="button" onClick={handleAddItem} style={{maxWidth:100}}>
           Add Item
         </Button>
-        <Button type="submit">Generate Invoice</Button>
+        {showInvoice?
+          <>
+            <Button type="button" onClick={handleResetForm}>Resert Form</Button>
+            <Button type="submit" style={{display:'none'}}>Generate Invoice</Button>
+          </>
+          :
+          <Button type="submit">Generate Invoice</Button>
+        }
       </Form>
-
-      <Invoice invoiceData={invoiceData} />
+        {showInvoice &&
+        <Invoice invoiceData={invoiceData} />
+        }
     </Container>
   );
 };
